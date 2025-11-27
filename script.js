@@ -1,4 +1,3 @@
-// Seleção de elementos
 const platformLinks = document.querySelectorAll('.platform-link');
 const conversationGroups = document.querySelectorAll('.conversation-group');
 const conversationItems = document.querySelectorAll('.conversation-item');
@@ -8,7 +7,6 @@ const chatMessages = document.querySelector('.chat-messages');
 const chatHeader = document.querySelector('.chat-header');
 const searchInput = document.querySelector('input[type="search"]');
 
-// Dados das conversas (simulação)
 const chatData = {
   1: {
     name: 'João Silva',
@@ -116,27 +114,22 @@ const chatData = {
   }
 };
 
-// Trocar plataforma
 platformLinks.forEach(link => {
   link.addEventListener('click', (e) => {
     e.preventDefault();
     const platform = link.getAttribute('data-platform');
     
-    // Remove active de todos os links
     platformLinks.forEach(l => l.classList.remove('active'));
     link.classList.add('active');
     
-    // Esconde todos os grupos
     conversationGroups.forEach(group => {
       group.classList.add('d-none');
     });
     
-    // Mostra o grupo selecionado
     const selectedGroup = document.querySelector(`.conversation-group[data-platform="${platform}"]`);
     if (selectedGroup) {
       selectedGroup.classList.remove('d-none');
       
-      // Clica na primeira conversa
       const firstConversation = selectedGroup.querySelector('.conversation-item');
       if (firstConversation) {
         firstConversation.click();
@@ -145,31 +138,25 @@ platformLinks.forEach(link => {
   });
 });
 
-// Selecionar conversa
 conversationItems.forEach(item => {
   item.addEventListener('click', () => {
-    // Remove active de todos
     conversationItems.forEach(i => i.classList.remove('active'));
     item.classList.add('active');
     
-    // Remove badge de não lidas
     const badge = item.querySelector('.badge');
     if (badge) {
       badge.remove();
     }
     
-    // Carrega o chat
     const chatId = item.getAttribute('data-chat-id');
     loadChat(chatId);
   });
 });
 
-// Carregar chat
 function loadChat(chatId) {
   const chat = chatData[chatId];
   if (!chat) return;
   
-  // Atualizar header
   const headerHtml = `
     <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center">
@@ -198,18 +185,15 @@ function loadChat(chatId) {
   
   chatHeader.innerHTML = headerHtml;
   
-  // Atualizar mensagens
   chatMessages.innerHTML = '<div class="message-date text-center mb-3"><span class="badge bg-light text-dark">Hoje</span></div>';
   
   chat.messages.forEach(msg => {
     addMessageToChat(msg.text, msg.type, msg.time, chat.avatar);
   });
   
-  // Scroll para o final
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Adicionar mensagem ao chat
 function addMessageToChat(text, type, time, avatar = null) {
   const messageDiv = document.createElement('div');
   messageDiv.className = `message ${type}`;
@@ -235,7 +219,6 @@ function addMessageToChat(text, type, time, avatar = null) {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Enviar mensagem
 function sendMessage() {
   const text = messageInput.value.trim();
   if (!text) return;
@@ -247,7 +230,6 @@ function sendMessage() {
   messageInput.value = '';
   messageInput.focus();
   
-  // Simular resposta automática (opcional)
   setTimeout(() => {
     const responses = [
       'Entendi! Vou verificar isso para você.',
@@ -258,12 +240,9 @@ function sendMessage() {
     ];
     const randomResponse = responses[Math.floor(Math.random() * responses.length)];
     
-    // Descomente a linha abaixo para ativar resposta automática
-    // addMessageToChat(randomResponse, 'received', time, chatHeader.querySelector('img').src);
   }, 2000);
 }
 
-// Event listeners para enviar mensagem
 sendButton.addEventListener('click', sendMessage);
 messageInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) {
@@ -272,7 +251,6 @@ messageInput.addEventListener('keypress', (e) => {
   }
 });
 
-// Buscar conversas
 searchInput.addEventListener('input', (e) => {
   const searchTerm = e.target.value.toLowerCase();
   
@@ -288,7 +266,6 @@ searchInput.addEventListener('input', (e) => {
   });
 });
 
-// Funções auxiliares
 function getPlatformIcon(platform) {
   const icons = {
     'WhatsApp': 'whatsapp',
@@ -322,11 +299,8 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
-// Inicialização
 document.addEventListener('DOMContentLoaded', () => {
-  // Carregar primeiro chat
   loadChat('1');
   
-  // Focar no input
   messageInput.focus();
 });
